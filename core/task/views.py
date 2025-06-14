@@ -9,5 +9,10 @@ import json
 
 # Create your views here.
     
-class Template(LoginRequiredMixin,TemplateView):
+class Template(TemplateView):
     template_name='task/task.html'
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('account:login')
+        return super().dispatch(request,*args,**kwargs)
