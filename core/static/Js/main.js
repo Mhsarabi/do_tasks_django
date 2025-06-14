@@ -37,8 +37,9 @@ function addTodo() {
 }
 
 function addTaskToDOM(text, id, done = false) {
-  if (list.children.length === 1 && list.children[0].textContent.includes('هیچ کاری')) {
-    list.innerHTML = '';
+  const noTaskMsg = document.getElementById('no-task-msg');
+  if (noTaskMsg) {
+  noTaskMsg.remove();
   }
 
   const li = document.createElement('li');
@@ -180,12 +181,15 @@ function createDefaultButtons(id, liElement) {
 window.addEventListener('DOMContentLoaded', () => {
   list.innerHTML = '<li>⏳ در حال بارگذاری...</li>';
 
-  fetch('/api/v1/task')
+  fetch('/task/api/v1/task')
     .then(res => res.json())
     .then(data => {
       list.innerHTML = '';
       if (data.length === 0) {
-        list.innerHTML = '<li>هیچ تسکی موجود نیست</li>';
+        const msg = document.createElement('li');
+        msg.id = 'no-task-msg';
+        msg.textContent = 'هیچ تسکی موجود نیست';
+        list.appendChild(msg);
         return;
       }
       data.forEach(task => {
@@ -200,3 +204,4 @@ window.addEventListener('DOMContentLoaded', () => {
 input.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') addTodo();
 });
+
