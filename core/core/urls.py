@@ -23,7 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/',include('account.urls')),
     path('task/',include('task.urls')),
-    path('',include('task.urls'))
+    path('',include('task.urls')),
+    path('api-auth',include('rest_framework.urls'))
 ]
 if settings.DEBUG:
     urlpatterns+=static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

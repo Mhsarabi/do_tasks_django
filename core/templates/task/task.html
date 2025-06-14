@@ -13,35 +13,20 @@
     <h2>✅ لیست کارهای روزانه</h2>
 
     <div class="input-section">
-      <input type="text" id="todo-input" placeholder=" کارات یادت نره😅 اینجا بنویس" />
+      <input type="text" id="todo-input" placeholder="کارات یادت نره😅 اینجا بنویس" />
       <button onclick="addTodo()">➕</button>
     </div>
 
-    <ul id="todo-list">
-      {% for task in tasks %}
-        <li data-id="{{ task.id }}" class="{% if task.done %}completed{% endif %}">
-          <span>{{ task.task }}</span>
-          <div class="actions">
-            <button onclick="toggleDone({{ task.id }}, this.parentElement.parentElement)">✔</button>
-            <button onclick="deleteTask({{ task.id }}, this.parentElement.parentElement)">🗑</button>
-          </div>
-        </li>
-      {% empty %}
-        <li>.هیچ کاری اضافه نشده است</li>
-      {% endfor %}
-    </ul>
-     <div class="logout-container">
-    <form method="post" action="{%url 'account:logout'%}">
-      {% csrf_token %}
-      <button type="submit" class="logout-button">🚪 خروج</button>
-    </form>
+    <ul id="todo-list"></ul>
+
+    <div class="logout-container">
+      <form method="post" action="{% url 'account:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-button">🚪 خروج</button>
+      </form>
+    </div>
   </div>
 
-  </div>
-
-<script>
-  const addTaskUrl = "{% url 'task:add-task' %}";
-</script>
-<script src="{% static 'Js\main.js' %}"></script>
+  <script src="{% static 'Js/main.js' %}"></script>
 </body>
 </html>
