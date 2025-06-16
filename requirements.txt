@@ -1,4 +1,4 @@
 django >4.2,<4.3
 python-decouple
 djangorestframework
-drf_yasg
+drf-yasg[validation]
