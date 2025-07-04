@@ -1,30 +1,40 @@
 const input = document.getElementById('todo-input');
 const list = document.getElementById('todo-list');
 
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-      cookie = cookie.trim();
-      if (cookie.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
+function getToken() {
+  const token = localStorage.getItem('access_token');
+  if (!token) {
+    alert("لطفاً ابتدا وارد شوید.");
+    window.location.href = "/account/login/";
   }
-  return cookieValue;
+  return token;
+}
+
+function authFetch(url, options = {}) {
+  const token = getToken();
+  if (!options.headers) options.headers = {};
+  options.headers['Authorization'] = 'Bearer ' + token;
+
+  return fetch(url, options).then(response => {
+    if (response.status === 401) {
+      alert("دسترسی غیرمجاز. لطفاً دوباره وارد شوید.");
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = "/account/login/";
+      throw new Error("Unauthorized");
+    }
+    return response;
+  });
 }
 
 function addTodo() {
   const text = input.value.trim();
   if (text === '') return;
 
-  fetch('/task/api/v1/task', {
+  authFetch('/task/api/v1/task', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken')
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({ task: text })
   })
@@ -38,9 +48,7 @@ function addTodo() {
 
 function addTaskToDOM(text, id, done = false) {
   const noTaskMsg = document.getElementById('no-task-msg');
-  if (noTaskMsg) {
-  noTaskMsg.remove();
-  }
+  if (noTaskMsg) noTaskMsg.remove();
 
   const li = document.createElement('li');
   li.setAttribute('data-id', id);
@@ -76,11 +84,10 @@ function addTaskToDOM(text, id, done = false) {
 function toggleDone(id, liElement) {
   const newDoneStatus = !liElement.classList.contains('completed');
 
-  fetch(`/task/api/v1/task/${id}`, {
+  authFetch(`/task/api/v1/task/${id}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken')
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({ done: newDoneStatus })
   })
@@ -121,11 +128,10 @@ function saveEdit(id, inputElement, liElement) {
   const newText = inputElement.value.trim();
   if (newText === '') return;
 
-  fetch(`/task/api/v1/task/${id}`, {
+  authFetch(`/task/api/v1/task/${id}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken')
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({ task: newText })
   })
@@ -140,11 +146,8 @@ function saveEdit(id, inputElement, liElement) {
 }
 
 function deleteTask(id, liElement) {
-  fetch(`/task/api/v1/task/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'X-CSRFToken': getCookie('csrftoken')
-    }
+  authFetch(`/task/api/v1/task/${id}`, {
+    method: 'DELETE'
   })
     .then(res => {
       if (res.status === 204) {
@@ -179,9 +182,17 @@ function createDefaultButtons(id, liElement) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  // بررسی اولیه توکن و هدایت به login در صورت نیاز
+  const token = localStorage.getItem('access_token');
+  if (!token) {
+    alert('برای مشاهده تسک‌ها ابتدا وارد شوید.');
+    window.location.href = '/account/login/';
+    return;
+  }
+
   list.innerHTML = '<li>⏳ در حال بارگذاری...</li>';
 
-  fetch('/task/api/v1/task')
+  authFetch('/task/api/v1/task')
     .then(res => res.json())
     .then(data => {
       list.innerHTML = '';
@@ -205,3 +216,29 @@ input.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') addTodo();
 });
 
+function logout() {
+  const token = localStorage.getItem('token'); // توکن rest_framework TokenAuthentication
+
+  if (token) {
+    fetch('/account/api/v1/logout', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Token ' + token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.warn('خطا در حذف توکن از سرور');
+      }
+    })
+    .catch(() => console.warn('خطا در حذف توکن از سرور'));
+  }
+
+  // پاک کردن توکن‌های localStorage
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('token');
+
+  window.location.href = "/account/login/";
+}

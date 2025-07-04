@@ -21,10 +21,7 @@
     <ul id="todo-list"></ul>
 
     <div class="logout-container">
-      <form method="post" action="{% url 'account:logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="logout-button">🚪 خروج</button>
-      </form>
+      <button onclick="logout()" class="logout-button">🚪 خروج</button>
     </div>
   </div>
 

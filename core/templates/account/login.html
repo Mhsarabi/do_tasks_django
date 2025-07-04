@@ -1,28 +1,26 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ورود</title>
-  <link rel="stylesheet" href="{%static 'CSS/log&reg.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/log&reg.css' %}" />
 </head>
 <body>
-  <div  class="form-container">
+  <div class="form-container">
     <h2>ورود به حساب</h2>
-    <form id="login-form" method="post">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-      <label for="{{form.email.id_for_label}}">ایمیل</label>
-      {{form.email}}
-      {{form.email.errors}}
-      <label for="{{form.password.id_for_label}}">رمز عبور</label>
-      {{form.password}}
-      {{form.password.errors}}
+    <form id="login-form">
+      <label for="email">ایمیل</label>
+      <input type="email" name="email" id="email" required />
+
+      <label for="password">رمز عبور</label>
+      <input type="password" name="password" id="password" required />
+
       <button type="submit">ورود</button>
-      <p>حساب نداری؟ <a href="{%url 'account:register'%}">ثبت‌نام کن</a></p>
+      <p>حساب نداری؟ <a href="{% url 'account:register' %}">ثبت‌نام کن</a></p>
     </form>
   </div>
-  <script src="{%static 'JS/log&reg.js' %}"></script>
+  <script src="{% static 'JS/login.js' %}"></script>
 </body>
 </html>

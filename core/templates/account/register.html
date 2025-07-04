@@ -1,31 +1,29 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ثبت‌نام</title>
-  <link rel="stylesheet" href="{%static 'CSS/log&reg.css'%}" />
+  <link rel="stylesheet" href="{% static 'CSS/log&reg.css' %}" />
 </head>
 <body>
   <div class="form-container">
     <h2>ساخت حساب جدید</h2>
-    <form id="register-form" method="post">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-      <label for="{{form.email.id_for_label}}">ایمیل</label>
-      {{form.email}}
-      {{form.email.errors}}
-      <label for="{{form.password.id_for_label}}">رمز عبور</label>
-      {{form.password1}}
-      {{form.password1.errors}}
-      <label for="{{form.confirm_password.id_for_label}}">تکرار رمز عبور</label>
-      {{form.password2}}
-      {{form.password2.errors}}
+    <form id="register-form">
+      <label for="email">ایمیل</label>
+      <input type="email" name="email" id="email" required />
+
+      <label for="password1">رمز عبور</label>
+      <input type="password" name="password1" id="password1" required />
+
+      <label for="password2">تکرار رمز عبور</label>
+      <input type="password" name="password2" id="password2" required />
+
       <button type="submit">ثبت‌نام</button>
-      <p>حساب داری؟ <a href="{%url 'account:login'%}">وارد شو</a></p>
+      <p>حساب داری؟ <a href="{% url 'account:login' %}">وارد شو</a></p>
     </form>
   </div>
-  <script src="{%static 'JS/log&reg.js'%}"></script>
+  <script src="{% static 'JS/register.js' %}"></script>
 </body>
 </html>
