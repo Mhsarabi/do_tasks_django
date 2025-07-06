@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            // 'X-CSRFToken': getCookie('csrftoken') 
           },
           body: JSON.stringify({
             email: email,
@@ -25,16 +24,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const data = await response.json();
 
         if (response.ok) {
-          alert('ثبت‌نام موفق! خوش آمدید');
-          localStorage.setItem('access_token', data.access);
-          localStorage.setItem('refresh_token', data.refresh);
-          window.location.href = '/'; 
+          alert('✅ ثبت‌نام موفق! لطفاً ایمیل خود را برای فعال‌سازی بررسی کنید.');
+          window.location.href = '/account/login'; 
         } else {
-          alert('خطا: ' + JSON.stringify(data));
+          alert('❌ خطا: ' + JSON.stringify(data));
         }
       } catch (error) {
         console.error(error);
-        alert('خطای شبکه!');
+        alert('⚠️ خطای شبکه! لطفاً دوباره تلاش کنید.');
       }
     });
   }

@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+FERNET_SECRET_KEY="MEtyWQQqIQSyWkYfxLOGyAGHd80wM9qlXPsyan30LDU="
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG",cast=bool)
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'mail_templated',
     'drf_yasg',
 
 ]
@@ -153,3 +155,12 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,     
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+# email configuration
+# EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS=False
+EMAIL_HOST='smtp4dev'
+EMAIL_HOST_USER=''
+EMAIL_HOST_PASSWORD=''
+EMAIL_PORT=25

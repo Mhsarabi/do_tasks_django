@@ -109,3 +109,25 @@ li.completed {
 .logout-form button:hover {
   background-color: #d9363e;
 }
+
+.change-password-button {
+  background-color: #ff9800;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-button:hover {
+  background-color: #f57c00;
+}
+
+.top-right-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}

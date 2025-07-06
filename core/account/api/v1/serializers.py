@@ -43,6 +43,8 @@ class CustomAuthTokenSerializer(serializers.Serializer):
             if not user:
                 msg=_('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg,code='authorization')
+            if not user.is_verified:
+                raise serializers.ValidationError({"detail":"user is not verified"})
         else:
             msg=_('Must include "username" and "password".')
             raise serializers.ValidationError(msg,code='authorization')
@@ -56,4 +58,47 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         validated_data=super().validate(attrs)
         validated_data['email']=self.user.email
         validated_data['user_id']=self.user.id
+        if not self.user.is_verified:
+            raise serializers.ValidationError({"detail":"user is not verified"})
         return validated_data
+    
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password=serializers.CharField(required=True)
+    new_password=serializers.CharField(required=True)
+    confirm_new_password=serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('new_password') != attrs.get('confirm_new_password'):
+            raise serializers.ValidationError({'details':"passwords does not match"})
+        
+        try:
+            validate_password(attrs.get('new_password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({'password':list(e.messages)})
+        
+        return super().validate(attrs)
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError({"error":"User with this email does not exist."})
+        return value
+    
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    token = serializers.CharField(write_only=True,required=False)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get("new_password") != attrs.get("confirm_new_password"):
+            raise serializers.ValidationError({"detail": "Passwords do not match."})
+
+        try:
+            validate_password(attrs.get("new_password"))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)})
+
+        return attrs

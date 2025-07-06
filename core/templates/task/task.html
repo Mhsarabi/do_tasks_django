@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>لیست کارها</title>
-  <link rel="stylesheet" href="{% static 'CSS/main.css' %}" />
+  <link rel="stylesheet" href="{% static 'Css/main.css' %}" />
 </head>
 <body>
   <div class="todo-container">
@@ -22,6 +22,9 @@
 
     <div class="logout-container">
       <button onclick="logout()" class="logout-button">🚪 خروج</button>
+    </div>
+    <div class="top-right-button">
+      <a href="{% url 'account:change_password' %}" class="change-password-button">🔒 تغییر رمز عبور</a>
     </div>
   </div>
 

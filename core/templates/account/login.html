@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ورود</title>
-  <link rel="stylesheet" href="{% static 'CSS/log&reg.css' %}" />
+  <link rel="stylesheet" href="{% static 'Css/log&reg.css' %}" />
 </head>
 <body>
   <div class="form-container">
@@ -18,6 +18,7 @@
       <input type="password" name="password" id="password" required />
 
       <button type="submit">ورود</button>
+      <p>رمز عبور خودت را فراموش کردی؟<a href="{% url 'account:send_email' %}">دریافت رمز عبور</a></p>
       <p>حساب نداری؟ <a href="{% url 'account:register' %}">ثبت‌نام کن</a></p>
     </form>
   </div>

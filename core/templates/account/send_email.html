@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>درخواست بازیابی رمز</title>
+  <link rel="stylesheet" href="{% static 'Css/log&reg.css' %}" />
+  <script src="{% static 'Js/send_email.js' %}" defer></script>
+</head>
+<body>
+  <div class="form-container">
+    <h2>بازیابی رمز عبور</h2>
+    <form id="reset-request-form">
+      <label for="email">ایمیل</label>
+      <input type="email" name="email" id="email" required />
+
+      <button type="submit">ارسال لینک بازیابی</button>
+    </form>
+    <p id="message" style="margin-top: 1rem;"></p>
+    <p><a href="{% url 'account:login' %}">بازگشت به ورود</a></p>
+  </div>
+</body>
+</html>
