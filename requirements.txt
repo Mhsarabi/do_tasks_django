@@ -4,3 +4,4 @@ djangorestframework
 drf-yasg[validation]
 django-mail-templated
 cryptography
+djangorestframework-simplejwt
