@@ -5,3 +5,5 @@ drf-yasg[validation]
 django-mail-templated
 cryptography
 djangorestframework-simplejwt
+pytest
+pytest-django

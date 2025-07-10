@@ -61,8 +61,9 @@ class CustomDiscardAuthToken(APIView):
     permission_classes=[IsAuthenticated]
 
     def post(self,request):
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        if hasattr(request.user, 'auth_token'):
+            request.user.auth_token.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class=CustomTokenObtainPairSerializer
